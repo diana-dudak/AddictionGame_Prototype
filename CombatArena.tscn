@@ -1,12 +1,21 @@
 [gd_scene format=3 uid="uid://bs1vcjqtxrymf"]
 
+[ext_resource type="Script" uid="uid://bnl45oqtjyfji" path="res://ResourceManager.gd" id="1_b5p3j"]
+[ext_resource type="Script" uid="uid://byfsy2rbbrho8" path="res://CombatTester.gd" id="1_h7473"]
 [ext_resource type="Script" uid="uid://bhii3wo3oylrx" path="res://DeckManager.gd" id="1_qn7jf"]
+[ext_resource type="Script" uid="uid://d3nv3m07qtmiy" path="res://UIManager.gd" id="3_vnun2"]
+[ext_resource type="Script" uid="uid://cr6uaekpn0380" path="res://ChainUI.gd" id="5_mu1jp"]
+[ext_resource type="PackedScene" uid="uid://cekewoxunq38y" path="res://CardUI.tscn" id="5_urmqb"]
 
-[node name="CombatArena" type="Node" unique_id=2123142560]
+[node name="CombatArena" type="Node" unique_id=2123142560 node_paths=PackedStringArray("resource_manager", "deck_manager")]
+script = ExtResource("1_h7473")
+resource_manager = NodePath("Logic/ResourceManager")
+deck_manager = NodePath("Logic/DeckManager")
 
 [node name="Logic" type="Node" parent="." unique_id=1277129681]
 
 [node name="ResourceManager" type="Node" parent="Logic" unique_id=251496624]
+script = ExtResource("1_b5p3j")
 
 [node name="ChainManager" type="Node" parent="Logic" unique_id=435828478]
 
@@ -15,20 +24,63 @@
 [node name="DeckManager" type="Node" parent="Logic" unique_id=629587727]
 script = ExtResource("1_qn7jf")
 
-[node name="UI" type="CanvasLayer" parent="." unique_id=552003944]
+[node name="UI" type="CanvasLayer" parent="." unique_id=552003944 node_paths=PackedStringArray("resource_manager", "deck_manager", "wp_bar", "voltage_bar", "wp_label", "hand_container")]
+script = ExtResource("3_vnun2")
+resource_manager = NodePath("../Logic/ResourceManager")
+deck_manager = NodePath("../Logic/DeckManager")
+wp_bar = NodePath("WillpowerBar")
+voltage_bar = NodePath("VoltageMeter")
+wp_label = NodePath("WillpowerBar/WPText")
+hand_container = NodePath("HandContainer")
+card_scene_template = ExtResource("5_urmqb")
 
 [node name="WillpowerBar" type="ProgressBar" parent="UI" unique_id=1794174971]
-offset_right = 107.0
-offset_bottom = 27.0
+offset_left = 14.0
+offset_top = 35.0
+offset_right = 121.0
+offset_bottom = 62.0
+show_percentage = false
+
+[node name="WPText" type="Label" parent="UI/WillpowerBar" unique_id=1608711493]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VoltageMeter" type="ProgressBar" parent="UI" unique_id=960136065]
-offset_left = 3.0
-offset_top = 48.0
-offset_right = 105.0
-offset_bottom = 75.0
+offset_left = 12.0
+offset_top = 87.0
+offset_right = 114.0
+offset_bottom = 114.0
 
-[node name="HBoxConHandContainertainer" type="HBoxContainer" parent="UI" unique_id=1250201844]
-offset_left = 44.0
-offset_top = 53.0
-offset_right = 84.0
-offset_bottom = 93.0
+[node name="HandContainer" type="HBoxContainer" parent="UI" unique_id=1250201844]
+offset_left = 109.0
+offset_top = 372.0
+offset_right = 1017.0
+offset_bottom = 575.0
+
+[node name="ColorRect" type="ColorRect" parent="UI/HandContainer" unique_id=1230285621]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.19076231, 0.19076234, 0.19076225, 1)
+
+[node name="ChainContainer" type="HBoxContainer" parent="UI" unique_id=1876728538]
+custom_minimum_size = Vector2(400, 130)
+offset_left = 327.0
+offset_top = 47.0
+offset_right = 727.0
+offset_bottom = 230.0
+script = ExtResource("5_mu1jp")
+
+[node name="ColorRect" type="ColorRect" parent="UI/ChainContainer" unique_id=1683964085]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.20152658, 0.20152658, 0.20152658, 1)
