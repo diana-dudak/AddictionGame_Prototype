@@ -1,3 +1,29 @@
 [gd_scene format=3 uid="uid://bs1vcjqtxrymf"]
 
-[node name="Node" type="Node" unique_id=2123142560]
+[node name="CombatArena" type="Node" unique_id=2123142560]
+
+[node name="Logic" type="Node" parent="." unique_id=1277129681]
+
+[node name="ResourceManager" type="Node" parent="Logic" unique_id=251496624]
+
+[node name="ChainManager" type="Node" parent="Logic" unique_id=435828478]
+
+[node name="TurnManager" type="Node" parent="Logic" unique_id=511030698]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=552003944]
+
+[node name="WillpowerBar" type="ProgressBar" parent="UI" unique_id=1794174971]
+offset_right = 107.0
+offset_bottom = 27.0
+
+[node name="VoltageMeter" type="ProgressBar" parent="UI" unique_id=960136065]
+offset_left = 3.0
+offset_top = 48.0
+offset_right = 105.0
+offset_bottom = 75.0
+
+[node name="HBoxConHandContainertainer" type="HBoxContainer" parent="UI" unique_id=1250201844]
+offset_left = 44.0
+offset_top = 53.0
+offset_right = 84.0
+offset_bottom = 93.0
