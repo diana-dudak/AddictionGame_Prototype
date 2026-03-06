@@ -44,15 +44,21 @@ func _ready() -> void:
 		chain_container.illegal_wp_attempted.connect(_on_illegal_wp_attempted)
 
 func _on_chain_updated(current_chain: Array[CardData]) -> void:
+	# 1. Damage Math
 	var projected_damage = chain_manager.calculate_projected_damage(current_chain)
 	
-	# Add some horror-themed visual feedback if damage is massive
 	if projected_damage > 100:
 		damage_label.modulate = Color(1.0, 0.2, 0.2) # Turn red
 	else:
 		damage_label.modulate = Color(1.0, 1.0, 1.0)
 		
 	damage_label.text = "Expected Damage: " + str(projected_damage)
+	
+	# 2. WP Cost Math
+	# We calculate the hypothetical cost of the cards on the table...
+	_last_projected_cost = resource_manager.calculate_total_chain_cost(current_chain)
+	# ...and instantly apply it to the Delta Bar visuals.
+	_apply_projected_visuals(_last_projected_cost)
 
 ## Instantiates a visual card when the logic layer draws one.
 func _on_card_drawn(card_data: CardData) -> void:
