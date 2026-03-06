@@ -69,6 +69,21 @@ func add_voltage(amount_percent: float) -> void:
 	current_voltage += amount_percent
 	voltage_changed.emit(current_voltage)
 
+## Calculates the cumulative WP cost of an entire proposed chain
+func calculate_total_chain_cost(chain: Array[CardData]) -> int:
+	var total_cost: int = 0
+	
+	for i in range(chain.size()):
+		var is_cup_bridge: bool = false
+		# The Cup Bridge: Cups bypass the standard rule and cost 0
+		if i > 0 and chain[i].suit == CardData.Suit.CUPS and chain[i].rank == chain[i-1].rank:
+			is_cup_bridge = true
+			
+		# Pass the position (i + 1) to the existing cost formula
+		total_cost += get_card_cost(i + 1, is_cup_bridge)
+		
+	return total_cost
+
 ## Signals the game state that Aurelius is offering a deal.
 func trigger_bailout_offer() -> void:
 	push_warning("Aurelius Siphon Triggered: Player WP critical (< 10).")

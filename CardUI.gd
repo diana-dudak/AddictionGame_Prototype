@@ -1,5 +1,7 @@
 class_name CardUI extends Control
 
+signal card_clicked(card_node: CardUI)
+
 @export var name_label: Label
 var card_data: CardData
 
@@ -35,3 +37,10 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	
 	# 2. Return the data payload we want to drop (returning self passes the whole node)
 	return self
+
+## Built-in Godot function: Listens for raw input on this specific control
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		# Detect a Left Click when the mouse button is RELEASED (cleaner than pressed)
+		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			card_clicked.emit(self)

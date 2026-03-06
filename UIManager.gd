@@ -1,26 +1,24 @@
 class_name UIManager extends CanvasLayer
 
 @export_category("Logic Dependencies")
-## Drag the ResourceManager node from your scene tree into this slot in the inspector
 @export var resource_manager: ResourceManager
-## Drag your DeckManager here
 @export var deck_manager: DeckManager
+@export var chain_manager: ChainManager
 
 @export_category("UI Elements")
-## Drag the WillpowerBar node here$WillpowerBar
-@export var wp_bar: ProgressBar
-## Drag the VoltageMeter node here
 @export var voltage_bar: ProgressBar
-
-@export_category("UI Labels")
-## Drag the WPText (Label) node here in the Inspector
+@export var projected_wp_bar: ProgressBar
+@export var wp_bar: ProgressBar
 @export var wp_label: Label
+@export var damage_label: Label
 
 @export_category("Card Containers")
-## Drag the HandContainer here
 @export var hand_container: HBoxContainer
-## Drag your newly created CardUI.tscn from the FileSystem here
 @export var card_scene_template: PackedScene
+@export var chain_container: ChainUI
+
+var _blink_tween: Tween
+var _last_projected_cost: int = 0
 
 func _ready() -> void:
 	# 1. Validate dependencies (Defensive Programming)
@@ -38,9 +36,24 @@ func _ready() -> void:
 	resource_manager.max_wp_clipped.connect(_on_max_wp_clipped)
 	
 	# Note: The initial sync is handled by the deferred signal in ResourceManager._ready()
-	if deck_manager:
-		deck_manager.card_drawn.connect(_on_card_drawn)
+	if deck_manager: deck_manager.card_drawn.connect(_on_card_drawn)
+	
+	# Connect the physical chain to the UI display
+	if chain_container and chain_manager:
+		chain_container.chain_updated.connect(_on_chain_updated)
+		chain_container.illegal_wp_attempted.connect(_on_illegal_wp_attempted)
+
+func _on_chain_updated(current_chain: Array[CardData]) -> void:
+	var projected_damage = chain_manager.calculate_projected_damage(current_chain)
+	
+	# Add some horror-themed visual feedback if damage is massive
+	if projected_damage > 100:
+		damage_label.modulate = Color(1.0, 0.2, 0.2) # Turn red
+	else:
+		damage_label.modulate = Color(1.0, 1.0, 1.0)
 		
+	damage_label.text = "Expected Damage: " + str(projected_damage)
+
 ## Instantiates a visual card when the logic layer draws one.
 func _on_card_drawn(card_data: CardData) -> void:
 	if not card_scene_template:
@@ -56,6 +69,11 @@ func _on_card_drawn(card_data: CardData) -> void:
 ## Animates the Willpower bar changing.
 func _on_wp_changed(current_wp: int, max_wp: int) -> void:
 	wp_bar.max_value = max_wp
+	projected_wp_bar.max_value = max_wp
+	projected_wp_bar.value = float(current_wp)
+	
+	# Re-apply any existing projection slice
+	_apply_projected_visuals(_last_projected_cost)
 	
 	# Update the exact numbers on our custom label
 	wp_label.text = str(current_wp) + " / " + str(max_wp)
@@ -97,3 +115,40 @@ func _on_max_wp_clipped(new_max: int) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(wp_bar, "modulate", Color(0.2, 0.2, 0.2), 0.1) # Flash dark
 	tween.tween_property(wp_bar, "modulate", Color(1.0, 1.0, 1.0), 0.5) # Fade back to normal
+
+## Rapid red flash for an illegal move
+func _on_illegal_wp_attempted() -> void:
+	if _blink_tween:
+		_blink_tween.kill()
+		
+	projected_wp_bar.modulate = Color(1.0, 0.0, 0.0, 1.0) # Snap to Red
+	
+	var flash = get_tree().create_tween()
+	flash.tween_property(projected_wp_bar, "modulate:a", 0.2, 0.08)
+	flash.tween_property(projected_wp_bar, "modulate:a", 1.0, 0.08)
+	flash.set_loops(3) # Blink 3 times rapidly
+	
+	# When the error flash finishes, return to the normal yellow warning state
+	flash.finished.connect(func(): _apply_projected_visuals(_last_projected_cost))
+
+## The core logic for animating the Delta Bar
+func _apply_projected_visuals(cost: int) -> void:
+	var remaining_wp = resource_manager.current_wp - cost
+	
+	# Slide the foreground bar down to reveal the projected cost slice
+	var tween = get_tree().create_tween()
+	tween.tween_property(wp_bar, "value", float(remaining_wp), 0.2).set_trans(Tween.TRANS_SINE)
+	
+	wp_label.text = str(remaining_wp) + " / " + str(resource_manager.current_max_wp)
+	
+	# Handle the slow, threatening yellow blink
+	if _blink_tween:
+		_blink_tween.kill()
+		
+	if cost > 0:
+		projected_wp_bar.modulate = Color(1.0, 0.8, 0.0, 1.0) # Yellow
+		_blink_tween = get_tree().create_tween().set_loops()
+		_blink_tween.tween_property(projected_wp_bar, "modulate:a", 0.3, 0.6)
+		_blink_tween.tween_property(projected_wp_bar, "modulate:a", 1.0, 0.6)
+	else:
+		projected_wp_bar.modulate = Color(1.0, 1.0, 1.0, 1.0)

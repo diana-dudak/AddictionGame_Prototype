@@ -13,7 +13,7 @@ var hand: Array[CardData] = []
 
 func _ready() -> void:
 	_generate_initial_deck()
-	draw_cards(BASE_DRAW_AMOUNT)
+	#draw_cards(BASE_DRAW_AMOUNT)
 
 ## Generates the starting 28-card deck from 2 random suits.
 func _generate_initial_deck() -> void:
@@ -35,6 +35,7 @@ func _generate_initial_deck() -> void:
 
 ## Handles drawing cards, respecting the hard cap.
 func draw_cards(amount: int) -> void:
+	print("--- DECK MANAGER DRAWS CARDS ---")
 	for i in range(amount):
 		if hand.size() >= MAX_HAND_SIZE:
 			push_warning("Hand is full. Cannot draw more cards.")

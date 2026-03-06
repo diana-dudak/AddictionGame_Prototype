@@ -18,10 +18,16 @@ func _ready() -> void:
 	# Listen for the Siphon trigger
 	resource_manager.bailout_offered.connect(_on_bailout_offered)
 	
+	# Defer the initial draw so the UIManager has time to connect its signals
+	call_deferred("_start_prototype")
+
+func _start_prototype() -> void:
 	print("--- COMBAT PROTOTYPE ONLINE ---")
 	print("Press [SPACE] to take 'The Hit' (Draw Card, -2 WP, +5% Voltage)")
 	print("Press [RIGHT ARROW] to play a card and extend the chain")
-
+	# Deal the initial 5 cards
+	deck_manager.draw_cards(deck_manager.BASE_DRAW_AMOUNT)
+	
 func _unhandled_input(event: InputEvent) -> void:
 	# Ignore input if we are trapped in the bailout dialogue state
 	if is_bailout_pending:

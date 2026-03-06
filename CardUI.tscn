@@ -3,13 +3,15 @@
 [ext_resource type="Script" uid="uid://mivdvd2780xc" path="res://CardUI.gd" id="1_huidv"]
 
 [node name="CardUI" type="Control" unique_id=86390183 node_paths=PackedStringArray("name_label")]
-custom_minimum_size = Vector2(80, 120)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 6
 script = ExtResource("1_huidv")
 name_label = NodePath("ColorRect/Label")
 
@@ -20,6 +22,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 6
 color = Color(0.2, 0.2, 0.2, 1)
 
 [node name="Label" type="Label" parent="ColorRect" unique_id=778854666]
@@ -29,6 +33,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 6
+text = "Rank of Suits"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
