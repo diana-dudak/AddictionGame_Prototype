@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://bs1vcjqtxrymf"]
 
+[ext_resource type="Script" uid="uid://bhii3wo3oylrx" path="res://DeckManager.gd" id="1_qn7jf"]
+
 [node name="CombatArena" type="Node" unique_id=2123142560]
 
 [node name="Logic" type="Node" parent="." unique_id=1277129681]
@@ -9,6 +11,9 @@
 [node name="ChainManager" type="Node" parent="Logic" unique_id=435828478]
 
 [node name="TurnManager" type="Node" parent="Logic" unique_id=511030698]
+
+[node name="DeckManager" type="Node" parent="Logic" unique_id=629587727]
+script = ExtResource("1_qn7jf")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=552003944]
 
