@@ -8,6 +8,29 @@
 [ext_resource type="Script" uid="uid://cr6uaekpn0380" path="res://ChainUI.gd" id="5_mu1jp"]
 [ext_resource type="PackedScene" uid="uid://cekewoxunq38y" path="res://CardUI.tscn" id="5_urmqb"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbuh7"]
+bg_color = Color(0.21950099, 0.21950105, 0.21950087, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tw5c"]
+bg_color = Color(0.4312015, 0.054239996, 0.06648727, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1tw5c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fysti"]
+bg_color = Color(0.41799894, 0.6324537, 0.74843735, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="CombatArena" type="Node" unique_id=2123142560 node_paths=PackedStringArray("resource_manager", "deck_manager")]
 script = ExtResource("1_h7473")
 resource_manager = NodePath("Logic/ResourceManager")
@@ -54,11 +77,18 @@ layout_mode = 2
 [node name="ProjectedWPBar" type="ProgressBar" parent="UI/ResourcesLayout/WPWrapper" unique_id=1919165470]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_fbuh7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1tw5c")
+step = 1.0
+value = 80.0
 show_percentage = false
 
 [node name="WillpowerBar" type="ProgressBar" parent="UI/ResourcesLayout/WPWrapper" unique_id=1794174971]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_1tw5c")
+theme_override_styles/fill = SubResource("StyleBoxFlat_fysti")
+value = 40.0
 show_percentage = false
 
 [node name="WPText" type="Label" parent="UI/ResourcesLayout/WPWrapper/WillpowerBar" unique_id=1608711493]
@@ -72,6 +102,7 @@ offset_right = -1.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+text = "placeholder"
 horizontal_alignment = 1
 vertical_alignment = 1
 

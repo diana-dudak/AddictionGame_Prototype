@@ -24,7 +24,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 6
-color = Color(0.2, 0.2, 0.2, 1)
+color = Color(0.20644411, 0.19455957, 0.21854922, 1)
 
 [node name="Label" type="Label" parent="ColorRect" unique_id=778854666]
 layout_mode = 1

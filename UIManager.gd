@@ -75,18 +75,6 @@ func _on_wp_changed(current_wp: int, max_wp: int) -> void:
 	# Re-apply any existing projection slice
 	_apply_projected_visuals(_last_projected_cost)
 	
-	# Update the exact numbers on our custom label
-	wp_label.text = str(current_wp) + " / " + str(max_wp)
-	
-	# Kill any existing animations on the bar to prevent stuttering
-	var tween = get_tree().create_tween()
-	
-	# If we took damage, snap quickly. If we healed, fill smoothly.
-	var duration = 0.15 if current_wp < wp_bar.value else 0.4
-	
-	tween.tween_property(wp_bar, "value", float(current_wp), duration)\
-		.set_trans(Tween.TRANS_SINE)\
-		.set_ease(Tween.EASE_OUT)
 
 ## Animates the Voltage meter creeping up.
 func _on_voltage_changed(current_voltage: float) -> void:
